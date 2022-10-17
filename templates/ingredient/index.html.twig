@@ -4,29 +4,45 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h1>Liste des Ingredients:</h1>
-  <table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">NAME</th>
-      <th scope="col">PRICE</th>
-      <th scope="col">CREATED AT</th>
-    </tr>
-  </thead>
-  <tbody>
-   {% for ingredient in pagination %}
-    <tr class="table">
-      <td>{{ingredient.id}}</td>
-      <td>{{ingredient.name}}</td>
-      <td>{{ingredient.price}}€</td>
-      <td>{{ingredient.createdAt|date('d-m-Y')}}</td>
-    </tr>
-   {% endfor %}
-  </tbody>
-</table>
-<div class="navigation">
-    {{ knp_pagination_render(pagination) }}
-</div>
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success text-center">
+        {{ message }}
+    </div>
+{% endfor %}
+  {% if pagination.items != null %}
+      <h1>Liste des Ingredients:({{ pagination.getTotalItemCount }} ingredients)</h1>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">NAME</th>
+                <th scope="col">PRICE</th>
+                <th scope="col">CREATED AT</th>
+                <th scope="col">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingredient in pagination %}
+                <tr class="table">
+                <td>{{ingredient.id}}</td>
+                <td>{{ingredient.name}}</td>
+                <td>{{ingredient.price}}€</td>
+                <td>{{ingredient.createdAt|date('d-m-Y')}}</td>
+                <td>
+                    <a class="btn btn-danger" href="{{path('app_ingredient_delete',{'id':ingredient.id})}}"><i class="fa fa-trash"></i></a>
+                    <a class="btn btn-success" href="{{path('app_ingredient_update',{'id':ingredient.id})}}"><i class="fa fa-edit"></i></a>
+                </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation d-flex justify-content-center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+  {% else %}
+    <div class="alert alert-danger text-center">
+        Aucun Ingrédient
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

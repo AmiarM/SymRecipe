@@ -2,13 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\IngredientRepository;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\IngredientRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
+#[UniqueEntity(
+    fields: ['name'],
+    message: 'This name is already exist.',
+)]
 class Ingredient
 {
     #[ORM\Id]
