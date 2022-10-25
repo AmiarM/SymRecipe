@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Recettes:{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success text-center">
+        {{ message }}
+    </div>
+{% endfor %}
+  {% if pagination.items != null %}
+      <h1>Liste des Recettes:({{ pagination.getTotalItemCount }} recettes)</h1>
+      <a href="{{path('app_recipe_new')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Ajouter</a>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">NAME</th>
+                <th scope="col">PRICE</th>
+                <th scope="col">DIFFICULTY</th>
+                <th scope="col">CREATED AT</th>
+                <th scope="col">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for recipe in pagination %}
+                <tr class="table">
+                <td>{{recipe.id}}</td>
+                <td>{{recipe.name}}</td>
+                <td>
+                    {% if recipe.price is null %}
+                        Non Rensegné
+                    {% else %}
+                        {{recipe.price}}€
+                    {% endif %}
+                </td>
+                <td>
+                    {% if recipe.price is null %}
+                        Non Rensegné
+                    {% else %}
+                        {{recipe.difficulty}}€
+                {% endif %}
+                </td>
+                <td>{{recipe.createdAt|date('d-m-Y')}}</td>
+                <td>
+                    <a class="btn btn-danger" href="{{path('app_recipe_delete',{'id': recipe.id})}}"><i class="fa fa-trash"></i></a>
+                    <a class="btn btn-success" href="{{path('app_recipe_update',{'id': recipe.id})}}"><i class="fa fa-edit"></i></a>
+                </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation d-flex justify-content-center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+  {% else %}
+    <div class="alert alert-danger text-center">
+        Aucune Recette
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
